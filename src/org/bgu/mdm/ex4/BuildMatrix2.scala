@@ -54,7 +54,8 @@ object BuildMatrix2 extends App {
       wordsWindow => wordsWindow.takeRight(WINDOW_SIZE - 1).map((_, wordsWindow(0))))
     .filter(pair => !pair._1.equals(pair._2))
     .filter(pair => wordKeysMap.value.contains(pair._1) && wordKeysMap.value.contains(pair._2))
-    .map(pair => ((wordKeysMap.value(pair._1), wordKeysMap.value(pair._2)), 1))
+    .map(pair => (wordKeysMap.value(pair._1) , wordKeysMap.value(pair._2) ) )
+    .map(pair => if (pair._1 > pair._2)  ((pair._1 , pair._2),1) else ((pair._2, pair._1),1) )
     .reduceByKey(_ + _)
 
   //  val wordsMatrix = new CoordinateMatrix(counts.map( item => new MatrixEntry(item._1._1,item._1._2,item._2) ));
