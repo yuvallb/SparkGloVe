@@ -11,11 +11,8 @@ import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
 
 object BuildMatrix2 extends App {
   
-  // train files - COCA magazine, located at: /Users/y755096/workspace/ex4glove/COCA/text_magazine_qnb/*.txt
-  val trainFile = "COCA/small/w_mag*.txt" // train file
-  //val trainFile = "COCA/text_magazine_qnb/*.txt" // train file
-  //val trainFile = "COCA/text_magazine_qnb/*.txt" // train files
-  val savedRDDfiles = "coocMatrixSmall8";
+  val trainFile = "COCA/text_magazine_qnb/*.txt" // train file
+  val savedRDDfiles = "coocMatrix";
 
   val logFile = "app2.log" // optional log file 
   val VOCAB_MIN_COUNT = 5 // מספר הופעות מינימלי של מלה כדי להיכלל בחישוב
