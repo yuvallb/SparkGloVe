@@ -52,16 +52,18 @@ object BuildWordVectors2 extends App {
   // restore saved RDD's
   val wordKeys = sc.objectFile[(String, Long)](savedRDDfiles + "Keys")
   val counts = sc.objectFile[((Long, Long), Int)](savedRDDfiles)
+  log("number of coocurence observations: " + counts.count())
 
   val vocabularySize = wordKeys.count().toInt;
   val maxWordId = wordKeys.map( _._2).reduce( (a,b) => ( if (a>b) a else b ) )
   log("vocabularySize is " + vocabularySize)
   log("maxWordId is " + maxWordId)
 
+  log("Running SGD, miniBatchFraction is " + miniBatchFraction)
   // convert counts to matrix format from RDD of wordId,wordId,count
   // to RDD of count, vector of the two word id's
   val wordsMatrix: RDD[scala.Tuple2[Double, Vector]] = counts.map(item => (item._2, Vectors.dense(item._1._1, item._1._2)));
-
+  
   // Build the words vectors
   // -----------------------------
   val updater = new SimpleUpdater()
@@ -74,7 +76,9 @@ object BuildWordVectors2 extends App {
   sc.parallelize(result._1.toArray).saveAsObjectFile(savedVectorFiles)
   sc.parallelize(result._2).saveAsObjectFile(savedVectorFiles + "Loss")
 
-  log("loss per iteration: " + result._2)
+  val b = new StringBuilder()
+  result._2.addString(b, ",")
+  println("Optimization interations: " + b.toString())
 
   log("============ End Run ========");
 

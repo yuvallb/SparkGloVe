@@ -44,7 +44,9 @@ object BuildMatrix2 extends App {
   val textFile = sc.textFile(trainFile)
   val all_words = textFile.flatMap(line => line.split(" ")).map(word => word.toLowerCase())
 
-  val wordKeys = all_words.map(word => (word, 1)).reduceByKey(_ + _).filter(_._2 >= VOCAB_MIN_COUNT)
+  val wordKeys = all_words.map(word => (word, 1))
+    .reduceByKey(_ + _).filter(_._2 >= VOCAB_MIN_COUNT)
+    .filter(_._1.length()>1).filter( _._1.matches("[a-z]+") )
     .zipWithUniqueId().map(wordKeyCount => (wordKeyCount._1._1, wordKeyCount._2))
 
   val wordKeysMap = sc.broadcast(wordKeys.collectAsMap());
