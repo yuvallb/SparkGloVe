@@ -37,22 +37,25 @@ class GloveGradient extends Gradient {
     (1+data(ij).toInt) * (VECTOR_SIZE+1) - 1
   }
   private def _wi(data: Vector, weights: Vector): Vector = {
-    return Vectors.dense(weights.toArray.slice(_w_start(0, data), _w_end(0,data)))
+    Vectors.dense(weights.toArray.slice(_w_start(0, data), _w_end(0,data)))
   }
 
   private def _wj(data: Vector, weights: Vector): Vector = {
-    return Vectors.dense(weights.toArray.slice(_w_start(1, data), _w_end(1,data)))
+    Vectors.dense(weights.toArray.slice(_w_start(1, data), _w_end(1,data)))
   }
   
   private def _bi(data: Vector, weights: Vector): Double = {
-    return weights.toArray(_b_pos(0, data))
+    weights.toArray(_b_pos(0, data))
   }
 
   private def _bj(data: Vector, weights: Vector): Double = {
-    return weights.toArray(_b_pos(1,data))
+    weights.toArray(_b_pos(1,data))
   }
 
-
+  def word_vector(wordId: Int, weights: Vector): Vector = {
+    Vectors.dense(weights.toArray.slice(wordId  * (VECTOR_SIZE+1), (1+wordId) * (VECTOR_SIZE+1) - 2 ))
+  }
+  
   override def compute(data: Vector, label: Double, weights: Vector): (Vector, Double) = {
     val wi = _wi(data,weights)
     val wj = _wj(data,weights)

@@ -1,24 +1,24 @@
 package org.bgu.mdm.ex4
 
+import java.io.BufferedWriter
+import java.io.FileWriter
+import java.io.PrintWriter
+
+import scala.util.Random
+
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
-import org.apache.spark.sql._
-import org.apache.spark.streaming._
-import scala.collection._
-import java.io._
-import scala.util.Random
-import org.apache.spark.rdd.RDD
-import org.apache.spark.mllib.linalg.{ Vector, Vectors }
-import org.apache.spark.mllib.util.MLUtils
-import org.apache.spark.mllib.linalg.distributed.{ CoordinateMatrix, MatrixEntry }
-import org.apache.spark.mllib.rdd.RDDFunctions._
-import org.apache.spark.mllib.optimization._
 import org.apache.spark.mllib.linalg.GloveGradient
+import org.apache.spark.mllib.linalg.Vector
+import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.mllib.optimization.GradientDescent
+import org.apache.spark.mllib.optimization.SimpleUpdater
+import org.apache.spark.rdd.RDD
 
 object BuildWordVectors2 extends App {
 
-  val savedRDDfiles = "coocMatrixSmall";
-  val savedVectorFiles = "wordVectorsSmall";
+  val savedRDDfiles = "coocMatrix";
+  val savedVectorFiles = "wordVectors";
 
   val logFile = "app4.log" // optional log file 
   val VECTOR_SIZE = 50 // גודל הווקטור לייצוג המילה
@@ -43,9 +43,7 @@ object BuildWordVectors2 extends App {
   // initialize spark and spark-sql
   val conf = new SparkConf().setAppName("CoClustering").setMaster("local")
   val sc = new SparkContext(conf)
-  val sqlContext = new org.apache.spark.sql.SQLContext(sc)
-  import sqlContext.implicits._
-
+  
   // Read the cooccurrence matrix
   // -----------------------------
 

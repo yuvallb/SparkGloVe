@@ -6,8 +6,8 @@ import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.linalg.GloveGradient
 
 object ReadWordVectors extends App {
-  val savedRDDfiles = "coocMatrixSmall";
-  val savedVectorFiles = "wordVectorsSmall";
+  val savedRDDfiles = "coocMatrix";
+  val savedVectorFiles = "wordVectors";
 
   // initialize spark 
   val conf = new SparkConf().setAppName("CoClustering").setMaster("local")
