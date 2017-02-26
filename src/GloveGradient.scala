@@ -67,7 +67,7 @@ class GloveGradient extends Gradient {
     var dwi = wj.copy
     scal(weighting , dwi) ; scal(inner_cost , dwi) //dwi = weighting * wj + inner_cost
     var dwj = wi.copy
-    scal(weighting , dwi) ; scal(inner_cost , dwj) //dwj = weighting * wi + inner_cost
+    scal(weighting , dwj) ; scal(inner_cost , dwj) //dwj = weighting * wi + inner_cost
     val db = weighting * inner_cost
     var gradient = Array.fill[Double](weights.size)(0)
     gradient(_b_pos(0,data)) = db
