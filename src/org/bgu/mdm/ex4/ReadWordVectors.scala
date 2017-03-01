@@ -12,6 +12,9 @@ object ReadWordVectors extends App {
 
   val savedRDDfiles = "coocMatrixSmall";
   val savedVectorFiles = "wordVectorsSmall";
+  val X_MAX = 100 //  ערכו של X_MAX בנוסחה 9 במאמר
+  val ALPHA = 0.75 // ערכו של פרמטר Alpha בנוסחה 9 במאמר
+  val VECTOR_SIZE = 2 // גודל הווקטור לייצוג המילה  
 
   val test = Array(
     Array("man", "woman", "king"),
@@ -38,7 +41,7 @@ object ReadWordVectors extends App {
   println("Word dictionary size: " + wordKeys.size)
   // println("Word dictionary first items: " + wordKeys.map(item => (item._1 +" : " + item._2) ).reduce( _ + " \n" + _)  )
 
-  val gg = new GloveGradient();
+  val gg = new GloveGradient(VECTOR_SIZE, X_MAX, ALPHA);
 
   test.foreach(w3 => {
 
