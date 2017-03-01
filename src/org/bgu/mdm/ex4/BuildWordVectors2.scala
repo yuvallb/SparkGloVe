@@ -73,8 +73,7 @@ object BuildWordVectors2 extends App {
   // Build the words vectors
   // -----------------------------
   val updater = new SimpleUpdater()
-  val initialWeights: Vector = //Vectors.dense(Array.fill((maxWordId.toInt+1) * (VECTOR_SIZE+1) )(Random.nextDouble))
-  Vectors.dense(Array[Double](0.9926451880336998,0.5558561744724114,0.8477777131154619,0.30738839693971953,0.5083874253499047,0.4215912357649044,0.975210113077309,0.4385911050797886,0.37714301729644073,0.9921110705763369,0.2658584716956168,0.5544452922438219,0.9315590900061462,0.6173980841943681,0.4084576812727593,0.5832950254051409,0.16571718254639112,0.5009251826799306,0.3839479272493115,0.9052708295041679,0.16865705334412295));
+  val initialWeights: Vector = Vectors.dense(Array.fill((maxWordId.toInt+1) * (VECTOR_SIZE+1) )(Random.nextDouble))
 
   //--------------------------
   log("Dictionary: \n" + wordKeys.map(pair =>  pair._1 +" => " +  pair._2 + "\n").reduce(_+_) )
