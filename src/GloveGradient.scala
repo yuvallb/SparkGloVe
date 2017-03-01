@@ -29,7 +29,7 @@ class GloveGradient(vectorSize: Int, xMax: Int, alpha: Double) extends Gradient 
     return data(ij).toInt * (vectorSize + 1)
   }
   private def _w_end(ij: Int, data: Vector): Int = {
-    return (1 + data(ij).toInt) * (vectorSize + 1) - 2
+    return (1 + data(ij).toInt) * (vectorSize + 1) - 1 // last item is -2, not -1, but slice is taking start <= index(x) < end
   }
   private def _b_pos(ij: Int, data: Vector): Int = {
     return (1 + data(ij).toInt) * (vectorSize + 1) - 1
@@ -58,22 +58,27 @@ class GloveGradient(vectorSize: Int, xMax: Int, alpha: Double) extends Gradient 
     val weighting = _weighting(label)
     val inner_cost = (dot(wi, wj) + bi + bj - Math.log(label))
     val loss = weighting * inner_cost * inner_cost
-    var dwi = wj.copy
-    scal(weighting, dwi); scal(inner_cost, dwi) //dwi = weighting * wj * inner_cost
-    var dwj = wi.copy
-    scal(weighting, dwj); scal(inner_cost, dwj) //dwj = weighting * wi * inner_cost
     val db = weighting * inner_cost
+    var dwi = Vectors.dense(Array.fill[Double](vectorSize)(0))
+    axpy(db, wj, dwi);  //dwi = wj * (inner_cost * weighting)
+    var dwj = Vectors.dense(Array.fill[Double](vectorSize)(0))
+    axpy(db, wi, dwj);  //dwj = wi * (inner_cost * weighting)
     var gradient = Array.fill[Double](weights.size)(0)
     gradient(_b_pos(0, data)) = db
     gradient(_b_pos(1, data)) = db
     dwi.toArray.copyToArray(gradient, _w_start(0, data), vectorSize)
     dwj.toArray.copyToArray(gradient, _w_start(1, data), vectorSize)
     cnt += 1;
-    Logger.getRootLogger().error("\n--------\ndata: " + data + "\nlabel: " + label +
+    /*Logger.getRootLogger().error("\n--------\ndata: " + data + "\nlabel: " + label +
+        "\nweighting: " + weighting +
+        "\ninner_cost: " + inner_cost +
+        "\ndwi: " + dwi +
+        "\ndwj: " + dwj +
         "\nweights: " + weights +
         "\ngradient: "+Vectors.dense(gradient) +
         "\nLoss: "+loss+
         "\nrun number " + cnt)
+    */
     (Vectors.dense(gradient), loss)
   }
 
@@ -82,10 +87,8 @@ class GloveGradient(vectorSize: Int, xMax: Int, alpha: Double) extends Gradient 
     label: Double,
     weights: Vector,
     cumGradient: Vector): Double = {
-    Logger.getRootLogger().error("\n--------\ncumGradient before: " + cumGradient)
     val (gradient, loss) = compute(data, label, weights)
     axpy(1.toDouble, gradient, cumGradient)
-    Logger.getRootLogger().error("\n--------\ncumGradient after: " + cumGradient)
     loss
   }
   
