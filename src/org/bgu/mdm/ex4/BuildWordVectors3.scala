@@ -96,21 +96,23 @@ object BuildWordVectors3 extends App {
   var biases = initialBiases.copy
   
   var converged = false // not implemented - always false
-  var i = 1
-  while (!converged && i <= MAX_ITER) {
+  var iter = 1
+  while (!converged && iter <= MAX_ITER) {
     // broadcast weights and biases
     val bcWeights = sc.broadcast(weights)
     val bcBiases = sc.broadcast(biases)
     
-    val (gradientSum, biasVector, batchCounts) = counts.sample(false, miniBatchFraction, 34 + i)
+    val (gradientSum, biasVector, batchCounts) = counts.sample(false, miniBatchFraction, 34 + iter)
       // aggregate a gradients matrix, bias vector and count vector
-      .treeAggregate((Array.fill(numRows)(Vectors.dense(Array.fill(VECTOR_SIZE)(0.0))), Vectors.dense(Array.fill(numRows)(0.0)), Vectors.dense(Array.fill(numRows)(0.0))))(
+      .treeAggregate( ( 
+          Array.fill(numRows)(Vectors.dense(Array.fill(VECTOR_SIZE)(0.0))), 
+          Vectors.dense(Array.fill(numRows)(0.0)), 
+          Vectors.dense(Array.fill(numRows)(0.0))))(
         seqOp = (c, v) => {
           // c: (gradients_weights, gradients_bias, count), v: ((wordId,wordId), count)
           gradient.compute(c._1, c._2, c._3, v._1._1, v._1._2, v._2, bcWeights.value, bcBiases.value)
           // returns partitioned values: Array[Vector] , Vector , Vector
-         }
-        ,
+         } ,
         combOp = (c1, c2) => {
           // c: (gradients_weights, gradients_bias, count)
           gradient.aggregate(c1._1, c2._1, c1._2, c2._2, c1._3, c2._3)
@@ -120,41 +122,13 @@ object BuildWordVectors3 extends App {
     // iteration ended
     // update weights and biases
     if (batchCounts.toArray.sum > 0) {
-          val thisIterStepSize = stepSize / Math.sqrt(i)
-
-      /*
-       * override def compute(
-      weightsOld: Vector,
-      gradient: Vector,
-      stepSize: Double,
-      iter: Int,
-      regParam: Double): (Vector, Double) = {
-
-    val thisIterStepSize = stepSize / math.sqrt(iter)
-    val brzWeights: BV[Double] = weightsOld.asBreeze.toDenseVector
-    brzAxpy(-thisIterStepSize, gradient.asBreeze, brzWeights)
-    (Vectors.fromBreeze(brzWeights), 0)
-       * 
-       * 
-       * 
-       * 
-      val update = updater.compute(
-        weights, Vectors.fromBreeze(gradientSum / miniBatchSize.toDouble),
-        stepSize, i, regParam)
-      weights = update._1
-      regVal = update._2
-
-      previousWeights = currentWeights
-      currentWeights = Some(weights)
-      if (previousWeights != None && currentWeights != None) {
-        converged = isConverged(previousWeights.get,
-          currentWeights.get, convergenceTol)
-      }
-      */
+          val thisIterStepSize = stepSize / Math.sqrt(iter)
+          val results = gradient.update(gradientSum, weights, biasVector, biases, batchCounts, thisIterStepSize)
+          
     } else {
-      log(s"Iteration ($i/$MAX_ITER). The size of sampled batch is zero")
+      log(s"Iteration ($iter/$MAX_ITER). The size of sampled batch is zero")
     }
-    i += 1 // next iteration
+    iter += 1 // next iteration
   }
 
   log("End word vectors, saving to " + savedVectorFiles);
