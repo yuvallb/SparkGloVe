@@ -2,22 +2,12 @@ package org.apache.spark.mllib.linalg
 
 import org.apache.spark.mllib.linalg.BLAS.axpy
 import org.apache.spark.mllib.linalg.BLAS.dot
-import org.apache.spark.mllib.linalg.BLAS.scal
-import org.apache.spark.mllib.optimization.Gradient
-import org.apache.log4j.{ Level, Logger }
 
-/*
- * parameters:
- * data: (i,j) word ID's
- * label: Xij word cooccurrence count
- * weights: Vector of size: (vocabulary) times ((word vector size) + (1 for bias))
- * 
- * returns:
- * Vector: gradient (0 for all words except i,j)
- * Double: loss
- */
-class GloveGradient(vectorSize: Int, xMax: Int, alpha: Double) extends Gradient {
+class GloveGradient(vectorSize: Int, xMax: Int, alpha: Double) {
+
+  // iteration count for debugging
   var cnt = 0;
+
   // weighting function - equation 9
   def _weighting(x: Double): Double = {
     if (x < xMax)
@@ -25,87 +15,87 @@ class GloveGradient(vectorSize: Int, xMax: Int, alpha: Double) extends Gradient 
     else
       return 1
   }
-  private def _w_start(ij: Int, data: Vector): Int = {
-    return data(ij).toInt * (vectorSize + 1)
-  }
-  private def _w_end(ij: Int, data: Vector): Int = {
-    return (1 + data(ij).toInt) * (vectorSize + 1) - 1 // last item is -2, not -1, but slice is taking start <= index(x) < end
-  }
-  private def _b_pos(ij: Int, data: Vector): Int = {
-    return (1 + data(ij).toInt) * (vectorSize + 1) - 1
-  }
-  private def _wi(data: Vector, weights: Vector): Vector = {
-    return Vectors.dense(weights.toArray.slice(_w_start(0, data), _w_end(0, data)))
-  }
 
-  private def _wj(data: Vector, weights: Vector): Vector = {
-    return Vectors.dense(weights.toArray.slice(_w_start(1, data), _w_end(1, data)))
-  }
-
-  private def _bi(data: Vector, weights: Vector): Double = {
-    return weights.toArray(_b_pos(0, data))
-  }
-
-  private def _bj(data: Vector, weights: Vector): Double = {
-    return weights.toArray(_b_pos(1, data))
-  }
-
-  override def compute(data: Vector, label: Double, weights: Vector): (Vector, Double) = {
-    val wi = _wi(data, weights)
-    val wj = _wj(data, weights)
-    val bi = _bi(data, weights)
-    val bj = _bj(data, weights)
-    val weighting = _weighting(label)
-    val inner_cost = (dot(wi, wj) + bi + bj - Math.log(label))
+  // compute gradients of a single data point
+  def compute(gradientsW: Array[Vector], gradientsB: Vector, counts: Vector, wordI: Int, wordJ: Int, Xij: Int, weights: Array[Vector], bias: Vector): (Array[Vector], Vector, Vector) = {
+    val wi = weights(wordI)
+    val wj = weights(wordJ)
+    val weighting = _weighting(Xij)
+    val inner_cost = (dot(wi, wj) + bias(wordI) + bias(wordJ) - Math.log(Xij))
     val loss = weighting * inner_cost * inner_cost
     val db = weighting * inner_cost
     var dwi = Vectors.dense(Array.fill[Double](vectorSize)(0))
-    axpy(db, wj, dwi);  //dwi = wj * (inner_cost * weighting)
+    axpy(db, wj, dwi); //dwi = wj * (inner_cost * weighting)
     var dwj = Vectors.dense(Array.fill[Double](vectorSize)(0))
-    axpy(db, wi, dwj);  //dwj = wi * (inner_cost * weighting)
-    var gradient = Array.fill[Double](weights.size)(0)
-    gradient(_b_pos(0, data)) = db
-    gradient(_b_pos(1, data)) = db
-    dwi.toArray.copyToArray(gradient, _w_start(0, data), vectorSize)
-    dwj.toArray.copyToArray(gradient, _w_start(1, data), vectorSize)
+    axpy(db, wi, dwj); //dwj = wi * (inner_cost * weighting)
+    // update weight gradients
+    axpy(1, dwi, gradientsW(wordI))
+    axpy(1, dwj, gradientsW(wordJ))
+    // update bias gradients
+    axpy(1, Vectors.sparse(counts.size, Array(wordI, wordJ), Array(db, db)), gradientsB)
+    // update counts - increment position i and j
+    axpy(1, Vectors.sparse(counts.size, Array(wordI, wordJ), Array(1, 1)), counts)
+    /*
     cnt += 1;
-    /*Logger.getRootLogger().error("\n--------\ndata: " + data + "\nlabel: " + label +
-        "\nweighting: " + weighting +
+    Logger.getRootLogger().error("\n--------\nwordI: " + wordI + "\nwordJ: " + wordJ +
+        "\nXij: " + Xij +
         "\ninner_cost: " + inner_cost +
         "\ndwi: " + dwi +
         "\ndwj: " + dwj +
-        "\nweights: " + weights +
-        "\ngradient: "+Vectors.dense(gradient) +
+        "\ndb: " + db +
+        "\nweights: " + VtoS(weights) +
+        "\ngradientsW: "+ VtoS(gradientsW) +
+        "\ngradientsB: "+ gradientsB.toArray.mkString(" ") +
         "\nLoss: "+loss+
         "\nrun number " + cnt)
     */
-    (Vectors.dense(gradient), loss)
+    (gradientsW, gradientsB, counts)
   }
 
-  override def compute(
-    data: Vector,
-    label: Double,
-    weights: Vector,
-    cumGradient: Vector): Double = {
-    val (gradient, loss) = compute(data, label, weights)
-    axpy(1.toDouble, gradient, cumGradient)
-    loss
+  // sum two gradients
+  def aggregate(
+    gradientsW1: Array[Vector], gradientsW2: Array[Vector],
+    gradientsB1: Vector, gradientsB2: Vector,
+    counts1: Vector, counts2: Vector): (Array[Vector], Vector, Vector) = {
+    val gradsW = gradientsW1.clone
+    for (i <- 0 to gradsW.size - 1) {
+      axpy(1, gradientsW2(i), gradsW(i))
+    }
+    val gradsB = gradientsB1.copy
+    axpy(1, gradientsB2, gradsB)
+    val counts = counts1.copy
+    axpy(1, counts2, counts)
+    (gradsW, gradsB, counts)
   }
-  
-  
-  /*
-   * 
-   * The following functions are just used to debugging   
-   * 
-   */
-  def word_vector(wordId: Int, weights: Vector): Vector = {
-    Vectors.dense(weights.toArray.slice(wordId * (vectorSize + 1), (1 + wordId) * (vectorSize + 1) - 2))
+
+  // update weights according to gradients and step size
+  def update(gradientsW: Array[Vector], weights: Array[Vector],
+             gradientsB: Vector, biases: Vector,
+             counts: Vector, currentStepSize: Double): (Array[Vector], Vector) = {
+    var biasesArray = biases.toArray
+    for (wordId <- 0 to gradientsW.size - 1) {
+      if (counts(wordId) > 0) {
+        biasesArray(wordId) = biasesArray(wordId) - (currentStepSize * gradientsB(wordId) / counts(wordId))
+        axpy(-1 * currentStepSize / counts(wordId), gradientsW(wordId), weights(wordId))
+      }
+    }
+    (weights, Vectors.dense(biasesArray))
   }
-  def b(wordId: Int, weights: Vector): Double = {
-    weights.toArray((1 + wordId) * (vectorSize + 1) - 1)
+
+  // helper - calculate cost of a single data point
+  def singleCost(w: Array[Vector], b: Vector, wordI: Int, wordJ: Int, Xij: Int): Double = {
+    _weighting(Xij) *
+      Math.pow(dot(w(wordI), w(wordJ)) +
+        b(wordI) + b(wordJ)
+        - Math.log(Xij), 2)
   }
-  def _dot(a: Vector, b: Vector): Double = {
-    dot(a, b)
+
+  // debugging helper - print an array of 8 vectors
+  def VtoS(r: Array[Vector]): String = {
+    "(size=" + r.size + " x " + r(0).size + ") First item: [" + r(0).toArray.mkString(" ") +
+      "], [" + r(1).toArray.mkString(" ") + "], [" + r(2).toArray.mkString(" ") +
+      "], [" + r(3).toArray.mkString(" ") + "], [" + r(4).toArray.mkString(" ") +
+      "], [" + r(5).toArray.mkString(" ") + "], [" + r(6).toArray.mkString(" ") + "]"
   }
 
 }

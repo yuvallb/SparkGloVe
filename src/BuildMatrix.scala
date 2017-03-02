@@ -1,4 +1,4 @@
-package org.bgu.mdm.ex4
+
 
 import java.io.BufferedWriter
 import java.io.FileWriter
@@ -9,9 +9,12 @@ import org.apache.spark.SparkContext
 import org.apache.spark.mllib.rdd.RDDFunctions.fromRDD
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
 
-object BuildMatrix2 extends App {
-  
-  val trainFile = "COCA/text_magazine_qnb/*.txt" // train file
+object BuildMatrix extends App {
+
+  // train files - COCA magazine, located at: /Users/y755096/workspace/ex4glove/COCA/text_magazine_qnb/*.txt
+  //val trainFile = "COCA/small/w_mag*.txt" // train file
+  val trainFile = "COCA/text_magazine_qnb/*.txt" // train files
+  //val trainFile = "COCA/trivial.txt"
   val savedRDDfiles = "coocMatrix";
 
   val logFile = "app2.log" // optional log file 
@@ -33,9 +36,8 @@ object BuildMatrix2 extends App {
   log("============ Start Run ========");
 
   // initialize spark and spark-sql
-  val conf = new SparkConf().setAppName("CoClustering").setMaster("local")
+  val conf = new SparkConf().setAppName("GloVe").setMaster("local")
   val sc = new SparkContext(conf)
-  val sqlContext = new org.apache.spark.sql.SQLContext(sc)
 
   // Build the cooccurrence matrix
   // -----------------------------
@@ -46,8 +48,8 @@ object BuildMatrix2 extends App {
 
   val wordKeys = all_words.map(word => (word, 1))
     .reduceByKey(_ + _).filter(_._2 >= VOCAB_MIN_COUNT)
-    .filter(_._1.length()>1).filter( _._1.matches("[a-z]+") )
-    .zipWithUniqueId().map(wordKeyCount => (wordKeyCount._1._1, wordKeyCount._2))
+    .filter(_._1.length() > 1).filter(_._1.matches("[a-z]+"))
+    .zipWithUniqueId().map(wordKeyCount => (wordKeyCount._1._1, wordKeyCount._2.toInt))
 
   val wordKeysMap = sc.broadcast(wordKeys.collectAsMap());
 
@@ -56,8 +58,8 @@ object BuildMatrix2 extends App {
       wordsWindow => wordsWindow.takeRight(WINDOW_SIZE - 1).map((_, wordsWindow(0))))
     .filter(pair => !pair._1.equals(pair._2))
     .filter(pair => wordKeysMap.value.contains(pair._1) && wordKeysMap.value.contains(pair._2))
-    .map(pair => (wordKeysMap.value(pair._1) , wordKeysMap.value(pair._2) ) )
-    .map(pair => if (pair._1 > pair._2)  ((pair._1 , pair._2),1) else ((pair._2, pair._1),1) )
+    .map(pair => (wordKeysMap.value(pair._1), wordKeysMap.value(pair._2)))
+    .map(pair => if (pair._1 > pair._2) ((pair._1, pair._2), 1) else ((pair._2, pair._1), 1))
     .reduceByKey(_ + _)
 
   //  val wordsMatrix = new CoordinateMatrix(counts.map( item => new MatrixEntry(item._1._1,item._1._2,item._2) ));

@@ -1,33 +1,34 @@
-package org.bgu.mdm.ex4
+
 
 import java.io.BufferedWriter
 import java.io.FileWriter
 import java.io.PrintWriter
-import org.apache.log4j.{ Level, Logger }
 
 import scala.util.Random
 
+import org.apache.log4j.Level
+import org.apache.log4j.Logger
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
-import org.apache.spark.mllib.linalg.GloveGradient3
-import org.apache.spark.mllib.linalg._
-import org.apache.spark.mllib.optimization._
+import org.apache.spark.mllib.linalg.GloveGradient
+import org.apache.spark.mllib.linalg.Vector
+import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.rdd.RDD
 
-object BuildWordVectors3 extends App {
+object BuildWordVectors extends App {
 
-  //  val savedRDDfiles = "coocMatrixSmall";
-  //  val savedVectorFiles = "WordVectorsSmall";
-  val savedRDDfiles = "trivialMatrix";
-  val savedVectorFiles = "trivialWordVectors";
+  //val savedRDDfiles = "coocMatrixSmall";
+  //val savedVectorFiles = "WordVectorsSmall";
+  val savedRDDfiles = "coocMatrix";
+  val savedVectorFiles = "WordVectors";
 
   val logFile = "app5.log" // optional log file 
   val stepSize = 1
-  val MAX_ITER = 5 // מספר איטרציות
-  val X_MAX = 10 //  ערכו של X_MAX בנוסחה 9 במאמר
+  val MAX_ITER = 15 // מספר איטרציות
+  val X_MAX = 100 //  ערכו של X_MAX בנוסחה 9 במאמר
   val ALPHA = 0.75 // ערכו של פרמטר Alpha בנוסחה 9 במאמר
-  val VECTOR_SIZE = 3 // גודל הווקטור לייצוג המילה  
-  val miniBatchFraction = 1
+  val VECTOR_SIZE = 50 // גודל הווקטור לייצוג המילה  
+  val miniBatchFraction = 0.3
 
   var startTime = System.nanoTime();
 
@@ -44,12 +45,12 @@ object BuildWordVectors3 extends App {
   log("============ Start Run ========");
 
   // initialize spark and spark-sql
-  val conf = new SparkConf().setAppName("CoClustering").setMaster("local")
+  val conf = new SparkConf().setAppName("GloVe").setMaster("local")
   val sc = new SparkContext(conf)
   //raise log level to ERROR - ignoring the INFO messages from spark 
   val rootLogger = Logger.getRootLogger()
   rootLogger.setLevel(Level.ERROR)
-  val gradient = new GloveGradient3(VECTOR_SIZE, X_MAX, ALPHA);
+  val gradient = new GloveGradient(VECTOR_SIZE, X_MAX, ALPHA);
 
   // Read the cooccurrence matrix
   // -----------------------------
@@ -59,7 +60,7 @@ object BuildWordVectors3 extends App {
   // restore saved RDD's
   val wordKeys = sc.objectFile[(String, Int)](savedRDDfiles + "Keys")
   val counts = sc.objectFile[((Int, Int), Int)](savedRDDfiles)
-  log("number of cooccurrence observations: " + counts.count())
+  log("Number of cooccurrence observations: " + counts.count())
 
   val vocabularySize = wordKeys.count().toInt;
   val maxWordId = wordKeys.map(_._2).reduce((a, b) => (if (a > b) a else b))
@@ -75,17 +76,16 @@ object BuildWordVectors3 extends App {
   // Build the words vectors
   // -----------------------------
   val numRows = maxWordId.toInt + 1;
-  val initialWeights: Array[Vector] = Array.fill(numRows)(Vectors.dense(Array.fill(VECTOR_SIZE)(0.0)))
-  val initialBiases: Vector = Vectors.dense(Array.fill(VECTOR_SIZE)(0.0))
-  
+  val initialWeights: Array[Vector] = Array.fill(numRows)(Vectors.dense(Array.fill(VECTOR_SIZE)(Random.nextDouble)))
+  val initialBiases: Vector = Vectors.dense(Array.fill(numRows)(Random.nextDouble))
+
   //--------------------------
   //log("Dictionary: \n" + wordKeys.map(pair =>  pair._1 +" => " +  pair._2 + "\n").reduce(_+_) )
   //log("Counts Matrix: \n" + counts.map(pair => "WORDS: " + pair._1._1 +","+pair._1._2+" => " + pair._2 + "\n").reduce(_+_) )
-  //log("Initial Weights: (size=" + initialWeights.size+") " + initialWeights)
-  log("Initial Weights: (size=" + initialWeights.size + " x " + VECTOR_SIZE+") First item: " + initialWeights(0).toArray.mkString(" "))
-  log("Initial Biases: (size=" + initialBiases.size +") First 10 items: " + initialBiases.toArray.take(10).mkString(" "))
+  //log("Initial Weights: " + gradient.VtoS(initialWeights) )
+  //log("Initial Biases: (size=" + initialBiases.size +") First 10 items: " + initialBiases.toArray.take(10).mkString(" "))
   val cost0 = counts.map(pair => (
-      gradient.singleCost(initialWeights, initialBiases, pair._1._1.toInt, pair._1._2.toInt, pair._2)) )
+    gradient.singleCost(initialWeights, initialBiases, pair._1._1.toInt, pair._1._2.toInt, pair._2)))
     .reduce(_ + _)
   log("Initial cost: " + cost0)
 
@@ -94,40 +94,44 @@ object BuildWordVectors3 extends App {
   // 
   var weights = initialWeights.clone
   var biases = initialBiases.copy
-  
+
   var converged = false // not implemented - always false
   var iter = 1
   while (!converged && iter <= MAX_ITER) {
     // broadcast weights and biases
     val bcWeights = sc.broadcast(weights)
     val bcBiases = sc.broadcast(biases)
-    
+
     val (gradientSum, biasVector, batchCounts) = counts.sample(false, miniBatchFraction, 34 + iter)
       // aggregate a gradients matrix, bias vector and count vector
-      .treeAggregate( ( 
-          Array.fill(numRows)(Vectors.dense(Array.fill(VECTOR_SIZE)(0.0))), 
-          Vectors.dense(Array.fill(numRows)(0.0)), 
-          Vectors.dense(Array.fill(numRows)(0.0))))(
+      .treeAggregate((
+        Array.fill(numRows)(Vectors.dense(Array.fill(VECTOR_SIZE)(0.0))),
+        Vectors.dense(Array.fill(numRows)(0.0)),
+        Vectors.dense(Array.fill(numRows)(0.0))))(
         seqOp = (c, v) => {
           // c: (gradients_weights, gradients_bias, count), v: ((wordId,wordId), count)
           gradient.compute(c._1, c._2, c._3, v._1._1, v._1._2, v._2, bcWeights.value, bcBiases.value)
           // returns partitioned values: Array[Vector] , Vector , Vector
-         } ,
+        },
         combOp = (c1, c2) => {
           // c: (gradients_weights, gradients_bias, count)
           gradient.aggregate(c1._1, c2._1, c1._2, c2._2, c1._3, c2._3)
           // returns aggregated values in: Array[Vector] , Vector , Vector
         })
-        
+
     // iteration ended
     // update weights and biases
     if (batchCounts.toArray.sum > 0) {
-          val thisIterStepSize = stepSize / Math.sqrt(iter)
-          val results = gradient.update(gradientSum, weights, biasVector, biases, batchCounts, thisIterStepSize)
-          
+      val thisIterStepSize = stepSize / Math.sqrt(iter)
+      val results = gradient.update(gradientSum, weights, biasVector, biases, batchCounts, thisIterStepSize)
+      weights = results._1
+      biases = results._2
+      //Logger.getRootLogger().error("Updated Weight gradients: " + gradient.VtoS(weights) )
+      //Logger.getRootLogger().error("Updated Bias gradients: (size=" + initialBiases.size +") First 10 items: " + biases.toArray.take(10).mkString(" "))
     } else {
       log(s"Iteration ($iter/$MAX_ITER). The size of sampled batch is zero")
     }
+    log("Finished iteration " + iter)
     iter += 1 // next iteration
   }
 
@@ -135,10 +139,10 @@ object BuildWordVectors3 extends App {
 
   //--------------------------
   val cost1 = counts.map(pair => (
-      gradient.singleCost(weights, biases, pair._1._1.toInt, pair._1._2.toInt, pair._2)) )
+    gradient.singleCost(weights, biases, pair._1._1.toInt, pair._1._2.toInt, pair._2)))
     .reduce(_ + _)
   //log("Optimal Weights: (size=" + result._1.size+") " + result._1)
-  log("Optimal Weights: (size=" + weights.size + ") First item: " + weights(0).toArray.mkString(" "))
+  //log("Optimal Weights: " + gradient.VtoS(weights) )
   log("Optimized cost: " + cost1)
 
   //--------------------------------
