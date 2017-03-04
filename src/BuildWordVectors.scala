@@ -20,9 +20,10 @@ object BuildWordVectors extends App {
   //val savedRDDfiles = "coocMatrixSmall";
   //val savedVectorFiles = "WordVectorsSmall";
   val savedRDDfiles = "coocMatrix";
+  val reloadVectorFiles = "";
   val savedVectorFiles = "WordVectors";
 
-  val logFile = "app5.log" // optional log file 
+  val logFile = "BuildWordVectors.log" // optional log file 
   val stepSize = 1
   val MAX_ITER = 15 // מספר איטרציות
   val X_MAX = 100 //  ערכו של X_MAX בנוסחה 9 במאמר
@@ -46,6 +47,7 @@ object BuildWordVectors extends App {
 
   // initialize spark and spark-sql
   val conf = new SparkConf().setAppName("GloVe").setMaster("local")
+  .set("spark.driver.maxResultSize", "3g")
   val sc = new SparkContext(conf)
   //raise log level to ERROR - ignoring the INFO messages from spark 
   val rootLogger = Logger.getRootLogger()
@@ -69,16 +71,23 @@ object BuildWordVectors extends App {
 
   log("Running SGD, miniBatchFraction is " + miniBatchFraction + ", MAX_ITER = " + MAX_ITER + " stepSize = " + stepSize + " VECTOR_SIZE = " + VECTOR_SIZE)
 
-  // convert counts to matrix format from RDD of wordId,wordId,count
-  // to RDD of count, vector of the two word id's
-  val wordsMatrix: RDD[scala.Tuple2[Double, Vector]] = counts.map(item => (item._2, Vectors.dense(item._1._1, item._1._2)));
-
   // Build the words vectors
   // -----------------------------
   val numRows = maxWordId.toInt + 1;
-  val initialWeights: Array[Vector] = Array.fill(numRows)(Vectors.dense(Array.fill(VECTOR_SIZE)(Random.nextDouble)))
-  val initialBiases: Vector = Vectors.dense(Array.fill(numRows)(Random.nextDouble))
-
+  
+  // start with random weights
+  // OR start with known weights from previous optimization
+  val initialWeights : Array[Vector] = if (reloadVectorFiles.isEmpty()) {
+     Array.fill(numRows)(Vectors.dense(Array.fill(VECTOR_SIZE)(Random.nextDouble)))
+  } else {
+     sc.objectFile[Vector](reloadVectorFiles).collect()
+  }
+  val initialBiases: Vector = if (reloadVectorFiles.isEmpty()) {
+     Vectors.dense(Array.fill(numRows)(Random.nextDouble))
+  } else {
+     Vectors.dense(sc.objectFile[Double](reloadVectorFiles + "Bias").collect)
+  }
+  
   //--------------------------
   //log("Dictionary: \n" + wordKeys.map(pair =>  pair._1 +" => " +  pair._2 + "\n").reduce(_+_) )
   //log("Counts Matrix: \n" + counts.map(pair => "WORDS: " + pair._1._1 +","+pair._1._2+" => " + pair._2 + "\n").reduce(_+_) )

@@ -1,0 +1,8 @@
+0 : ============ Start Run ========
+1 : Start cooccurrence matrix, reading from COCA/text_magazine_qnb/*.txt
+1886 : End cooccurrence matrix, saving to coocMatrix
+1886 : ============ End Run ========
+0 : ============ Start Run ========
+1 : Start cooccurrence matrix, reading from COCA/text/*.txt
+7499 : End cooccurrence matrix, saving to coocMatrix
+7499 : ============ End Run ========

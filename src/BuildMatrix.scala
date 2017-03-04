@@ -11,13 +11,12 @@ import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
 
 object BuildMatrix extends App {
 
-  // train files - COCA magazine, located at: /Users/y755096/workspace/ex4glove/COCA/text_magazine_qnb/*.txt
-  //val trainFile = "COCA/small/w_mag*.txt" // train file
-  val trainFile = "COCA/text_magazine_qnb/*.txt" // train files
-  //val trainFile = "COCA/trivial.txt"
+  // train files 
+  //val trainFile = "COCA/small/w_mag*.txt" 
+  val trainFile = "COCA/text/*.txt" 
   val savedRDDfiles = "coocMatrix";
 
-  val logFile = "app2.log" // optional log file 
+  val logFile = "BuildMatrix.log" // optional log file 
   val VOCAB_MIN_COUNT = 5 // מספר הופעות מינימלי של מלה כדי להיכלל בחישוב
   val WINDOW_SIZE = 15 //  גודל החלון לחישוב co-occurrences
 
@@ -61,8 +60,6 @@ object BuildMatrix extends App {
     .map(pair => (wordKeysMap.value(pair._1), wordKeysMap.value(pair._2)))
     .map(pair => if (pair._1 > pair._2) ((pair._1, pair._2), 1) else ((pair._2, pair._1), 1))
     .reduceByKey(_ + _)
-
-  //  val wordsMatrix = new CoordinateMatrix(counts.map( item => new MatrixEntry(item._1._1,item._1._2,item._2) ));
 
   wordKeys.saveAsObjectFile(savedRDDfiles + "Keys")
   counts.saveAsObjectFile(savedRDDfiles)

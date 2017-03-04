@@ -1,0 +1,100 @@
+0 : ============ Start Run ========
+1 : Start word vectors, reading from coocMatrix
+130 : Number of cooccurrence observations: 83773231
+130 : vocabularySize is 129506
+130 : maxWordId is 131999
+130 : Running SGD, miniBatchFraction is 0.3, MAX_ITER = 15 stepSize = 1 VECTOR_SIZE = 50
+310 : Initial cost: 8.84446465274597E8
+594 : Finished iteration 1
+869 : Finished iteration 2
+1145 : Finished iteration 3
+1420 : Finished iteration 4
+1690 : Finished iteration 5
+1963 : Finished iteration 6
+2242 : Finished iteration 7
+2515 : Finished iteration 8
+2788 : Finished iteration 9
+3064 : Finished iteration 10
+3342 : Finished iteration 11
+3626 : Finished iteration 12
+3899 : Finished iteration 13
+4173 : Finished iteration 14
+4451 : Finished iteration 15
+4451 : End word vectors, saving to WordVectors
+4630 : Optimized cost: 1.136806134051891E7
+4631 : ============ End Run ========
+0 : ============ Start Run ========
+1 : Start word vectors, reading from coocMatrix
+299 : Number of cooccurrence observations: 210964245
+301 : vocabularySize is 280913
+301 : maxWordId is 292513
+301 : Running SGD, miniBatchFraction is 0.3, MAX_ITER = 15 stepSize = 1 VECTOR_SIZE = 50
+719 : Initial cost: 2.4697089042284746E9
+1552 : Finished iteration 1
+2404 : Finished iteration 2
+3255 : Finished iteration 3
+4106 : Finished iteration 4
+4955 : Finished iteration 5
+5811 : Finished iteration 6
+6660 : Finished iteration 7
+7508 : Finished iteration 8
+8356 : Finished iteration 9
+9205 : Finished iteration 10
+10056 : Finished iteration 11
+10907 : Finished iteration 12
+11755 : Finished iteration 13
+12603 : Finished iteration 14
+13450 : Finished iteration 15
+13450 : End word vectors, saving to WordVectors
+13890 : Optimized cost: 2.0664199447786804E7
+13892 : ============ End Run ========
+0 : ============ Start Run ========
+1 : Start word vectors, reading from coocMatrix
+303 : Number of cooccurrence observations: 210964245
+305 : vocabularySize is 280913
+305 : maxWordId is 292513
+305 : Running SGD, miniBatchFraction is 0.3, MAX_ITER = 15 stepSize = 1 VECTOR_SIZE = 50
+728 : Initial cost: 2.0664199447786804E7
+1581 : Finished iteration 1
+2453 : Finished iteration 2
+3320 : Finished iteration 3
+4184 : Finished iteration 4
+5057 : Finished iteration 5
+5920 : Finished iteration 6
+6783 : Finished iteration 7
+7647 : Finished iteration 8
+8510 : Finished iteration 9
+9371 : Finished iteration 10
+10234 : Finished iteration 11
+11096 : Finished iteration 12
+11959 : Finished iteration 13
+12823 : Finished iteration 14
+13686 : Finished iteration 15
+13686 : End word vectors, saving to WordVectors
+14127 : Optimized cost: 1.7005714072986607E7
+14129 : ============ End Run ========
+0 : ============ Start Run ========
+1 : Start word vectors, reading from coocMatrix
+326 : Number of cooccurrence observations: 210964245
+327 : vocabularySize is 280913
+327 : maxWordId is 292513
+327 : Running SGD, miniBatchFraction is 0.3, MAX_ITER = 15 stepSize = 1 VECTOR_SIZE = 50
+748 : Initial cost: 1.7005714072986607E7
+1588 : Finished iteration 1
+2432 : Finished iteration 2
+3286 : Finished iteration 3
+4143 : Finished iteration 4
+5005 : Finished iteration 5
+5857 : Finished iteration 6
+6717 : Finished iteration 7
+7640 : Finished iteration 8
+8527 : Finished iteration 9
+9430 : Finished iteration 10
+10320 : Finished iteration 11
+11199 : Finished iteration 12
+12066 : Finished iteration 13
+12975 : Finished iteration 14
+13871 : Finished iteration 15
+13871 : End word vectors, saving to WordVectors3
+14318 : Optimized cost: 1.5878615063736798E7
+14320 : ============ End Run ========

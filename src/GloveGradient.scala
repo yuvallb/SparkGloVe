@@ -5,9 +5,6 @@ import org.apache.spark.mllib.linalg.BLAS.dot
 
 class GloveGradient(vectorSize: Int, xMax: Int, alpha: Double) {
 
-  // iteration count for debugging
-  var cnt = 0;
-
   // weighting function - equation 9
   def _weighting(x: Double): Double = {
     if (x < xMax)
@@ -35,20 +32,6 @@ class GloveGradient(vectorSize: Int, xMax: Int, alpha: Double) {
     axpy(1, Vectors.sparse(counts.size, Array(wordI, wordJ), Array(db, db)), gradientsB)
     // update counts - increment position i and j
     axpy(1, Vectors.sparse(counts.size, Array(wordI, wordJ), Array(1, 1)), counts)
-    /*
-    cnt += 1;
-    Logger.getRootLogger().error("\n--------\nwordI: " + wordI + "\nwordJ: " + wordJ +
-        "\nXij: " + Xij +
-        "\ninner_cost: " + inner_cost +
-        "\ndwi: " + dwi +
-        "\ndwj: " + dwj +
-        "\ndb: " + db +
-        "\nweights: " + VtoS(weights) +
-        "\ngradientsW: "+ VtoS(gradientsW) +
-        "\ngradientsB: "+ gradientsB.toArray.mkString(" ") +
-        "\nLoss: "+loss+
-        "\nrun number " + cnt)
-    */
     (gradientsW, gradientsB, counts)
   }
 

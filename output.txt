@@ -1,0 +1,331 @@
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/03/04 17:38:48 INFO SparkContext: Running Spark version 2.0.2
+17/03/04 17:38:48 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/03/04 17:38:49 INFO SecurityManager: Changing view acls to: y755096
+17/03/04 17:38:49 INFO SecurityManager: Changing modify acls to: y755096
+17/03/04 17:38:49 INFO SecurityManager: Changing view acls groups to: 
+17/03/04 17:38:49 INFO SecurityManager: Changing modify acls groups to: 
+17/03/04 17:38:49 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(y755096); groups with view permissions: Set(); users  with modify permissions: Set(y755096); groups with modify permissions: Set()
+17/03/04 17:38:49 INFO Utils: Successfully started service 'sparkDriver' on port 59238.
+17/03/04 17:38:49 INFO SparkEnv: Registering MapOutputTracker
+17/03/04 17:38:49 INFO SparkEnv: Registering BlockManagerMaster
+17/03/04 17:38:49 INFO DiskBlockManager: Created local directory at /private/var/folders/_4/rv5y5sn96tqg8dfr5z8pdjkn8l3cqr/T/blockmgr-2a156846-40ea-42b5-bf64-92c207f4e924
+17/03/04 17:38:49 INFO MemoryStore: MemoryStore started with capacity 2004.6 MB
+17/03/04 17:38:49 INFO SparkEnv: Registering OutputCommitCoordinator
+17/03/04 17:38:49 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/03/04 17:38:49 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://192.168.14.10:4040
+17/03/04 17:38:49 INFO Executor: Starting executor ID driver on host localhost
+17/03/04 17:38:49 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 59239.
+17/03/04 17:38:49 INFO NettyBlockTransferService: Server created on 192.168.14.10:59239
+17/03/04 17:38:49 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.14.10, 59239)
+17/03/04 17:38:49 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.14.10:59239 with 2004.6 MB RAM, BlockManagerId(driver, 192.168.14.10, 59239)
+17/03/04 17:38:49 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.14.10, 59239)
+========= wordVectorsMag =============
+Question: man -> woman = king -> ? 
+Correct answer: queen: -0.09567077241250432
+     queen: place 24496
+Top 10 answers by cosine similarity:
+     predatory: 1.5638856517563582E-6
+     titled: 1.003466603155534E-5
+     wipe: 1.1565351362152754E-5
+     denoted: 1.3310205641436923E-5
+     techniques: 1.4373552712387827E-5
+     agonies: 2.9654951282820363E-5
+     lear: 3.1273521641894675E-5
+     alma: 3.296615096504141E-5
+     instrumentalists: 3.8664331237892036E-5
+     experiments: 4.1570604781937526E-5
+========= wordVectorsMag =============
+Question: france -> paris = italy -> ? 
+Correct answer: rome: 0.37978141479429384
+     rome: place 125598
+Top 10 answers by cosine similarity:
+     benezra: 8.939834694743354E-8
+     garfinkel: 1.3871099346918214E-6
+     drages: 1.4599311182195152E-6
+     lindstrom: 9.0749460046613E-6
+     ladar: 1.0746355097790428E-5
+     pitchforks: 1.5462719150427517E-5
+     disproportionate: 1.7027019005411148E-5
+     speakerphone: 1.7905904225345992E-5
+     typify: 1.981898965874862E-5
+     hollis: 2.215048961029531E-5
+========= wordVectorsMag =============
+Question: boy -> man = girl -> ? 
+Correct answer: woman: 0.17592107256427614
+     woman: place 47287
+Top 10 answers by cosine similarity:
+     maura: 8.254450742928299E-7
+     codesigned: 2.82970428366891E-6
+     reuel: 3.1834114230244737E-6
+     beish: 4.237998455280945E-6
+     autopsy: 1.4169205526659567E-5
+     drawl: 1.5463791184555653E-5
+     barbara: 1.7230275867308187E-5
+     garnishes: 1.937535986129557E-5
+     valerie: 2.060484766541748E-5
+     terragno: 3.5772571088110716E-5
+========= wordVectorsMag =============
+Question: strong -> stronger = clear -> ? 
+Correct answer: clearer: -0.019262449353587896
+     clearer: place 6174
+Top 10 answers by cosine similarity:
+     savvy: 4.815821851411606E-6
+     packaged: 4.941339998953964E-6
+     sheaffe: 6.421334274420154E-6
+     zoom: 9.960966052435793E-6
+     lxc: 1.2116920904525763E-5
+     fetching: 1.57476923468014E-5
+     tudors: 1.6243188215359083E-5
+     thickness: 1.707930337280228E-5
+     cottons: 1.807792058361457E-5
+     dole: 1.8341662941456782E-5
+
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/03/04 17:36:39 INFO SparkContext: Running Spark version 2.0.2
+17/03/04 17:36:39 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/03/04 17:36:39 INFO SecurityManager: Changing view acls to: y755096
+17/03/04 17:36:39 INFO SecurityManager: Changing modify acls to: y755096
+17/03/04 17:36:39 INFO SecurityManager: Changing view acls groups to: 
+17/03/04 17:36:39 INFO SecurityManager: Changing modify acls groups to: 
+17/03/04 17:36:39 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(y755096); groups with view permissions: Set(); users  with modify permissions: Set(y755096); groups with modify permissions: Set()
+17/03/04 17:36:39 INFO Utils: Successfully started service 'sparkDriver' on port 59189.
+17/03/04 17:36:39 INFO SparkEnv: Registering MapOutputTracker
+17/03/04 17:36:39 INFO SparkEnv: Registering BlockManagerMaster
+17/03/04 17:36:39 INFO DiskBlockManager: Created local directory at /private/var/folders/_4/rv5y5sn96tqg8dfr5z8pdjkn8l3cqr/T/blockmgr-ccfe26a4-153d-413b-8e6a-63a657e2f1e7
+17/03/04 17:36:39 INFO MemoryStore: MemoryStore started with capacity 2004.6 MB
+17/03/04 17:36:39 INFO SparkEnv: Registering OutputCommitCoordinator
+17/03/04 17:36:39 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/03/04 17:36:39 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://192.168.14.10:4040
+17/03/04 17:36:39 INFO Executor: Starting executor ID driver on host localhost
+17/03/04 17:36:39 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 59190.
+17/03/04 17:36:39 INFO NettyBlockTransferService: Server created on 192.168.14.10:59190
+17/03/04 17:36:39 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.14.10, 59190)
+17/03/04 17:36:39 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.14.10:59190 with 2004.6 MB RAM, BlockManagerId(driver, 192.168.14.10, 59190)
+17/03/04 17:36:39 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.14.10, 59190)
+========= wordVectors1 =============
+Question: man -> woman = king -> ? 
+Correct answer: queen: -0.27230106413241684
+     queen: place 13893
+Top 10 answers by cosine similarity:
+     trace: 2.3840284089526875E-5
+     selection: 3.83619747300612E-5
+     gain: 5.439800220408131E-5
+     development: 6.822089733826697E-5
+     senior: 8.441827186145279E-5
+     scored: 1.2094695852393755E-4
+     agreement: 1.4375295612423233E-4
+     flights: 2.2357712142717645E-4
+     tree: 2.2427330769259068E-4
+     statistics: 2.3005635575001904E-4
+========= wordVectors1 =============
+Question: france -> paris = italy -> ? 
+Correct answer: rome: 0.11689513158092124
+     rome: place 46475
+Top 10 answers by cosine similarity:
+     larch: 3.785067437922507E-6
+     trace: 5.46680248425524E-6
+     ridgepole: 9.347161502581969E-6
+     chaplain: 9.773300099324977E-6
+     overtly: 1.0310438317118198E-5
+     flimsy: 1.2709442312242025E-5
+     jerk: 1.5134920244630479E-5
+     quail: 1.593840338787178E-5
+     ret: 1.8116503395226857E-5
+     gonzales: 1.9924087922396083E-5
+========= wordVectors1 =============
+Question: boy -> man = girl -> ? 
+Correct answer: woman: 0.06475420993489511
+     woman: place 1611
+Top 10 answers by cosine similarity:
+     he: 3.475799817875824E-5
+     san: 7.34910842038472E-5
+     either: 8.35026363993352E-5
+     but: 1.6857423230920432E-4
+     shopping: 1.8015563406781343E-4
+     mitt: 1.8263962776776665E-4
+     explained: 2.1340420952042916E-4
+     trial: 2.5007362310547343E-4
+     notes: 3.040289226780013E-4
+     did: 3.1247173715853727E-4
+========= wordVectors1 =============
+Question: strong -> stronger = clear -> ? 
+Correct answer: clearer: -0.28520495592575923
+     clearer: place 19193
+Top 10 answers by cosine similarity:
+     individual: 5.5277103594542076E-5
+     greatly: 6.758871228196295E-5
+     graduation: 6.801774534692662E-5
+     ron: 9.486931765589901E-5
+     representatives: 1.1136121391552845E-4
+     intentions: 1.4912794426924503E-4
+     coffee: 1.5549982483797908E-4
+     libraries: 1.9192978941318106E-4
+     radon: 2.021220277317326E-4
+     leg: 2.38645452680597E-4
+
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/03/04 17:35:05 INFO SparkContext: Running Spark version 2.0.2
+17/03/04 17:35:05 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/03/04 17:35:05 INFO SecurityManager: Changing view acls to: y755096
+17/03/04 17:35:05 INFO SecurityManager: Changing modify acls to: y755096
+17/03/04 17:35:05 INFO SecurityManager: Changing view acls groups to: 
+17/03/04 17:35:05 INFO SecurityManager: Changing modify acls groups to: 
+17/03/04 17:35:05 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(y755096); groups with view permissions: Set(); users  with modify permissions: Set(y755096); groups with modify permissions: Set()
+17/03/04 17:35:06 INFO Utils: Successfully started service 'sparkDriver' on port 59173.
+17/03/04 17:35:06 INFO SparkEnv: Registering MapOutputTracker
+17/03/04 17:35:06 INFO SparkEnv: Registering BlockManagerMaster
+17/03/04 17:35:06 INFO DiskBlockManager: Created local directory at /private/var/folders/_4/rv5y5sn96tqg8dfr5z8pdjkn8l3cqr/T/blockmgr-079b4203-9a90-425b-a028-d02f5648151e
+17/03/04 17:35:06 INFO MemoryStore: MemoryStore started with capacity 2004.6 MB
+17/03/04 17:35:06 INFO SparkEnv: Registering OutputCommitCoordinator
+17/03/04 17:35:06 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/03/04 17:35:06 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://192.168.14.10:4040
+17/03/04 17:35:06 INFO Executor: Starting executor ID driver on host localhost
+17/03/04 17:35:06 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 59174.
+17/03/04 17:35:06 INFO NettyBlockTransferService: Server created on 192.168.14.10:59174
+17/03/04 17:35:06 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.14.10, 59174)
+17/03/04 17:35:06 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.14.10:59174 with 2004.6 MB RAM, BlockManagerId(driver, 192.168.14.10, 59174)
+17/03/04 17:35:06 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.14.10, 59174)
+========= wordVectors2 =============
+Question: man -> woman = king -> ? 
+Correct answer: queen: -0.24949427795955414
+     queen: place 10531
+Top 10 answers by cosine similarity:
+     description: 1.0731362394822419E-5
+     garden: 1.7650616408348974E-5
+     internal: 4.5391898629065786E-5
+     southern: 9.300853627325356E-5
+     worked: 9.916666195253221E-5
+     starting: 1.7592343925720844E-4
+     machines: 1.827714074512654E-4
+     narrative: 1.89490137058268E-4
+     laughter: 1.9070894806871852E-4
+     mary: 2.009798974255128E-4
+========= wordVectors2 =============
+Question: france -> paris = italy -> ? 
+Correct answer: rome: 0.10299260618541006
+     rome: place 21690
+Top 10 answers by cosine similarity:
+     plumber: 3.4938360300440507E-6
+     marking: 1.216302792927948E-5
+     brows: 1.4250280972682994E-5
+     presaged: 1.7365181252504414E-5
+     amb: 2.209215459769709E-5
+     mechanism: 2.8454748542960928E-5
+     spoiling: 4.4772242871027323E-5
+     dented: 4.9213601956754616E-5
+     forcible: 5.077271068198996E-5
+     embellishing: 5.8165649655328444E-5
+========= wordVectors2 =============
+Question: boy -> man = girl -> ? 
+Correct answer: woman: 0.04760863317400388
+     woman: place 1024
+Top 10 answers by cosine similarity:
+     priest: 5.653890591372779E-6
+     home: 3.930247832162337E-5
+     produced: 7.065427884223041E-5
+     wore: 1.1528670273119879E-4
+     dead: 2.2094309837839E-4
+     level: 2.4502154585304137E-4
+     higher: 2.6412392083308145E-4
+     administration: 3.3449551567221736E-4
+     already: 3.3511731219626473E-4
+     different: 3.4280489866500563E-4
+========= wordVectors2 =============
+Question: strong -> stronger = clear -> ? 
+Correct answer: clearer: -0.2790806586299892
+     clearer: place 16096
+Top 10 answers by cosine similarity:
+     bedroom: 8.460832753631742E-6
+     moderate: 2.138077608604405E-5
+     moreover: 2.978240738371607E-5
+     authorities: 5.366920481519877E-5
+     remote: 5.918236039548219E-5
+     knee: 8.266622878638774E-5
+     super: 1.082031770136549E-4
+     stress: 1.3079040481789317E-4
+     democracy: 1.5125753079103799E-4
+     entered: 1.7004742838544473E-4
+
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/03/04 17:20:02 INFO SparkContext: Running Spark version 2.0.2
+17/03/04 17:20:02 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/03/04 17:20:02 INFO SecurityManager: Changing view acls to: y755096
+17/03/04 17:20:02 INFO SecurityManager: Changing modify acls to: y755096
+17/03/04 17:20:02 INFO SecurityManager: Changing view acls groups to: 
+17/03/04 17:20:02 INFO SecurityManager: Changing modify acls groups to: 
+17/03/04 17:20:02 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(y755096); groups with view permissions: Set(); users  with modify permissions: Set(y755096); groups with modify permissions: Set()
+17/03/04 17:20:03 INFO Utils: Successfully started service 'sparkDriver' on port 59046.
+17/03/04 17:20:03 INFO SparkEnv: Registering MapOutputTracker
+17/03/04 17:20:03 INFO SparkEnv: Registering BlockManagerMaster
+17/03/04 17:20:03 INFO DiskBlockManager: Created local directory at /private/var/folders/_4/rv5y5sn96tqg8dfr5z8pdjkn8l3cqr/T/blockmgr-7fa0f89d-4cba-489e-84bd-e06f129540ea
+17/03/04 17:20:03 INFO MemoryStore: MemoryStore started with capacity 2004.6 MB
+17/03/04 17:20:03 INFO SparkEnv: Registering OutputCommitCoordinator
+17/03/04 17:20:03 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/03/04 17:20:03 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://192.168.14.10:4040
+17/03/04 17:20:03 INFO Executor: Starting executor ID driver on host localhost
+17/03/04 17:20:03 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 59047.
+17/03/04 17:20:03 INFO NettyBlockTransferService: Server created on 192.168.14.10:59047
+17/03/04 17:20:03 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.14.10, 59047)
+17/03/04 17:20:03 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.14.10:59047 with 2004.6 MB RAM, BlockManagerId(driver, 192.168.14.10, 59047)
+17/03/04 17:20:03 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.14.10, 59047)
+========= wordVectors3 =============
+Question: man -> woman = king -> ? 
+Correct answer: queen: -0.2512671052373431
+     queen: place 9794
+Top 10 answers by cosine similarity:
+     off: 1.076576205494284E-5
+     tires: 1.9672831367611998E-5
+     guide: 6.359445422021714E-5
+     increasing: 1.0799698723618079E-4
+     teaching: 1.3794689941459826E-4
+     moved: 1.530843860788611E-4
+     pushed: 1.8171781610765159E-4
+     adding: 2.1117636917944438E-4
+     term: 2.5004126583572095E-4
+     directly: 2.750228596086757E-4
+========= wordVectors3 =============
+Question: france -> paris = italy -> ? 
+Correct answer: rome: 0.09856506801093479
+     rome: place 17061
+Top 10 answers by cosine similarity:
+     ifor: 2.587701929401831E-6
+     directs: 3.3281772382487418E-6
+     consolidated: 2.4922688613759902E-5
+     lightened: 2.7803651649005445E-5
+     surveillance: 3.2853121579190514E-5
+     marc: 3.3551671927423143E-5
+     cataracts: 4.63855012236003E-5
+     polyester: 4.758772514312781E-5
+     simpler: 5.586113713740293E-5
+     disclose: 6.0322611732610554E-5
+========= wordVectors3 =============
+Question: boy -> man = girl -> ? 
+Correct answer: woman: 0.04264855187496752
+     woman: place 871
+Top 10 answers by cosine similarity:
+     works: 2.325623451271408E-5
+     down: 1.4227102297137417E-4
+     transfer: 1.6703372999471444E-4
+     tax: 1.925664666926341E-4
+     everything: 2.2428721907941096E-4
+     already: 2.8775609954245773E-4
+     mind: 3.2814397042280063E-4
+     long: 3.586570989264626E-4
+     by: 3.747024539393351E-4
+     do: 4.7451162855272067E-4
+========= wordVectors3 =============
+Question: strong -> stronger = clear -> ? 
+Correct answer: clearer: -0.276426693494906
+     clearer: place 14885
+Top 10 answers by cosine similarity:
+     organized: 2.2266107295276782E-5
+     caregivers: 3.317669737357143E-5
+     globe: 4.30355143763439E-5
+     narrative: 6.71984140104831E-5
+     classrooms: 6.805024156975037E-5
+     carries: 1.0347314694136855E-4
+     foot: 1.676249657288631E-4
+     paintings: 1.70712532495787E-4
+     bucks: 1.730846946609299E-4
+     pentagon: 1.7663080719032553E-4
