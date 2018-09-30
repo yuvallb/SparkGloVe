@@ -1,5 +1,8 @@
 ## GloVe implementation in Spark
 
+### Objective
+Implementation of "GloVe: Global Vectors for Word Representation" on Apache Spark 
+
 ### Source files
 
 BuildMatrix.scala – source code for reading text files and building co-occurrence matrix
@@ -98,14 +101,8 @@ The third program evaluates the optimized vectors on 4 test cases. For each case
 |boy -> man = girl -> woman           |1,611                      |1,024                       |871                           |
 |strong -> stronger = clear -> clearer|19,193                     |16,096                      |14,885                        |
 
+### References
+Jeffrey Pennington, Richard Socher, and Christopher D. Manning. 2014. [GloVe: Global Vectors for Word Representation](https://nlp.stanford.edu/pubs/glove.pdf)
+Davies, Mark. (2008-) The Corpus of Contemporary American English (COCA): 560 million words, 1990-present. Available online at [https://corpus.byu.edu/coca/](https://corpus.byu.edu/coca/).
 
 
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
-| Function name | Description                    |
-| ------------- | ------------------------------ |
-| `help()`      | Display the help window.       |
-| `destroy()`   | **Destroy your computer!**     |
